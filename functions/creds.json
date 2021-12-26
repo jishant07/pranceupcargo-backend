@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "pranceup-cargo",
+  "private_key_id": "99f10ce913abed2f25133420518bb034538bb11d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCo1uwP+iVdzsga\nvhC7VMEmxqq70LCaZ5SJ/EEii/ufYSommnWvbfFP+yrGFxx8CwuYkFx2qMPJ/fOq\npR2lUlMQ9bpTx8SdN0gmElZLkTpyc+C3BclebbTUesmGVfTKRGngv1Kh9K0l3y3d\nviaEPIndCIY24cQSi12M5QSEKuLlHIE9160s3uMfrAHM7Ql9EPJ2f8UvnY+iKFJt\n/5bu+5oxN8ijgJ5ntSw6yyxHP4+X0MQ37nEO2U+uByIqbkYup2b/F8eh0UlAKjBf\nsRzGYgAvzSSCpyVBRMuhqJSrCu9ogFCwEWFSvICHejNLaxcIHJmt3mbwGYN2j2pi\nXH2riSJnAgMBAAECggEAOru5Fr2/7egW+CaSD3imUGTf08H/DVdm9rFHv0rO11yn\nmxI0SjiGr3oCITK89/GnsQTXBXgj08qBzyTtMSt4NfglPyvJG5+1e3j5iAQXPuVM\nkJ50tGKZeyjTneWc6BfwdPxZNHm3GeuPOwoAwBOHKdrjRYg3+vN8MZ0hexCoKWa2\nLzieFWDna7/zF4q4jhtV7QYFOYtETTIAv03wQttAIzAUxUQY12wYTy40CYDPgd0o\npYmGwaeHE1OZwLoWtg2GpqKEGKoSOPnRqWfWtEgNNZwBiGG5px6A7wAcpf1gdVQd\n2HUrEnuGkK1vIQ2XBWMtkqJHgjys6YKX3Qoltl57wQKBgQDcvNcsF1B6Vs+gzsqF\nBy/tCIUIWw3MqTEJafcWs3cx0APRuRBRzhG6w9H2fna2oFw05GBXjivjL7O5ca7x\nAbjl0xkSxLX68bh/r9qLhS3J5Oh6h+A/vf2j9mJc7I36VHJklqnEgYTlii3VFsyt\n6ltSMccgcpnu1QKWK6hRd16msQKBgQDDz6+psEJVsBi8oKTRe4RnUgrK2Vyxj/LL\nU1M5UsRP9nrGgOA070h9qunQB6hiW5arAml3lsAlSqohUttSY51Pg+IE76H6KqU5\ncWkD+ClkmuAXl+E3kLTFvBsrZBgMSsdBgEBiLtxeauqWaagiVvnc5pEE6CCdYzwC\nXoWbytXQlwKBgQCloNC3lbreQTtEB0ZwsObmLclcbq4ZDi7sSGWN1BWw+8uR1xIG\nv+APypVGJrg+6m6lhWNA7z3BF278y++fiVJKqK4cphuCc1OkA7ixjbnAzxEdt8yt\nJ4slN1+xKBKUbj7zeRVjjGfCsH8ZcCUerkXdk9o9X6BfU9fABHwkvLP50QKBgQC+\njL1FRGFJQbTQ2wOJV8nhQdV+0UeDA7Iia1Px1Ll1l0ajJYcJ/FFu+YPPDaSvErHs\neMxptCoIIECvbRJBeu77EjxA0XGvIRDodZTcaALgBFdOnl5s1EUWp5dJAn7kd2Cw\nPT5qTW/l8eWXufoEcN92OGmnfL1Aa/FZ3OHoWdr4wQKBgHHkAfKXR+x64w9lFJ5z\n/FEjuoqpZbd/oesBQdMw8g52nyZCbqzCwm6MrHj2aSmeNkghBTNrSEbtT9LaLJFu\n92t/GAU/5JHfRx0pJrSK4J4TYoW5GVlTqN8C+8sEeRdSczsy76vxU1thi1g7KdHb\n+FZmCMCvc0a5An0TPbBR4+re\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-zruxj@pranceup-cargo.iam.gserviceaccount.com",
+  "client_id": "112013183911786715488",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-zruxj%40pranceup-cargo.iam.gserviceaccount.com"
+}
