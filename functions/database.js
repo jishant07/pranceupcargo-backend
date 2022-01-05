@@ -5,4 +5,4 @@ admin.initializeApp({
   databaseURL: "https://pranceup-cargo-default-rtdb.firebaseio.com"
 });
 
-module.exports = {dbref:admin.firestore(),admin};
+module.exports = admin;

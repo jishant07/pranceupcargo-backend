@@ -1,11 +1,13 @@
 const functions = require("firebase-functions");
 const app = require('express')();
+const bodyParser = require('body-parser');
+const cors = require('cors')
 
-app.use(require("./middlewares/authMiddleWare"));
-app.use("/auth",require("./routes/authRoutes"))
+//app.use(require("./middlewares/authMiddleWare"));
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json())
+app.use(cors())
 
-app.get("/",(req,res)=>{
-    res.send("OK reached index app")
-})
+app.use("/app",require("./routes/appRoutes"))
 
 exports.api = functions.https.onRequest(app)
