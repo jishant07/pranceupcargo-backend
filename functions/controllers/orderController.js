@@ -11,4 +11,21 @@ orderController.placeOrder = (req,res) =>{
     })
 }
 
+orderController.listOrders = (req,res) =>{
+    orderModel.listOrders().then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        console.log("ERROR FETCHING ORDERs",err)
+        res.json(globalModel.failure(err))
+    })
+}
+
+orderController.getOrderById = (req,res) =>{
+    orderModel.getOrderById(req.body.orderId).then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        res.json(globalModel.failure(err))
+    })
+}
+
 module.exports = orderController

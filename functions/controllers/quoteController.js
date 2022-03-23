@@ -11,4 +11,20 @@ quoteController.placeOnHold = (req,res) =>{
     })
 }
 
+quoteController.getAllQuotes = (req,res) => {
+    quoteModel.getAllQuotes().then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        res.json(globalModel.failure(err))
+    })
+}
+
+quoteController.getQuoteById = (req,res) =>{
+    quoteModel.getQuotesbyId(req.body.quoteId).then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        res.json(globalModel.failure(err))
+    })
+}
+
 module.exports = quoteController

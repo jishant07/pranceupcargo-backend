@@ -3,5 +3,6 @@ var priceController = require('../controllers/priceController')
 
 priceRouter.route("/addPriceToPort").post(priceController.addPriceToPort)
 priceRouter.route("/addPriceToAirport").post(priceController.addPriceToAirport)
+priceRouter.route("/getPrice").post()
 
 module.exports = priceRouter
