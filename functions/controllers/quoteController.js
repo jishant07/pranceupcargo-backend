@@ -3,7 +3,7 @@ const globalModel = require('../models/globalModel');
 var quoteModel = require('../models/quoteModel');
 
 quoteController.placeOnHold = (req,res) =>{
-    quoteModel.placeOnHold(req.data).then(result =>{
+    quoteModel.placeOnHold(req.body).then(result =>{
         res.json(globalModel.success(result))
     }).catch(err =>{
         console.log("ERROR PLACING QUOTE ON HOLD", err)

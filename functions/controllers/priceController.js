@@ -11,7 +11,7 @@ priceController.addPriceToPort = (req,res) =>{
 }
 
 priceController.addPriceToAirport = (req,res) =>{
-    priceModel.addPriceToPort(req.body).then(result =>{
+    priceModel.addPriceToAirport(req.body).then(result =>{
         res.json(globalModel.success(result))
     }).catch(err =>{
         console.log("ERROR ADDING PRICE TO THE AIRPORT", err)

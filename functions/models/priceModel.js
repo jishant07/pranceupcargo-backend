@@ -20,10 +20,10 @@ priceModel.addPriceToPort = (data) =>{
 
 priceModel.addPriceToAirport = (data) =>{
     return new Promise((resolve,reject) =>{
-        if(data.placeId && data.airPortId){
+        if(data.placeId && data.airportId){
             dbref.collection('locations').doc(data.placeId)
-            .collection('airports').doc(data.portId).set({normal:data.normal,express:data.express},{merge:true}).then(result =>{
-                resolve("Price added to the Port")
+            .collection('airports').doc(data.airportId).set({normal:data.normal,express:data.express},{merge:true}).then(result =>{
+                resolve("Price added to the Airport")
             }).catch(err =>{
                 console.log("ERROR ADDING PRICE TO THE AIRPORT",err)
                 reject("Price Adding Error")

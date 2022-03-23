@@ -9,7 +9,7 @@ quoteModel.placeOnHold = (data) =>{
     data.quoteAmount = "DUMMY";
     return new Promise((resolve,reject) =>{
         dbref.collection('quotations').add({...data}).then(result =>{
-            resolve(result)
+            resolve(result.id)
         }).catch(err =>{
             console.log("ERROR PLACING QUOTE ON HOLD", err)
             reject(err)
@@ -39,7 +39,7 @@ quoteModel.getQuotesbyId = (quoteId) =>{
     return new Promise((resolve,reject) =>{
         dbref.collection('quotations').doc(quoteId).get().then(result =>{
             if(result.exists){
-                resolve(result)
+                resolve(result.data())
             }else{
                 reject("Quote no found")
             }

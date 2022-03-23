@@ -4,7 +4,7 @@ const globalModel = require('../models/globalModel');
 
 authController.signUp = (req,res) =>{
     authModel.singup(req.body).then(result =>{
-        res.json(globalModel.success(result))
+        res.json(globalModel.success(result.id))
     }).catch(err =>{
         res.json(globalModel.failure(err))
     })
