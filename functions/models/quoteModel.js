@@ -4,11 +4,12 @@ var dbref = firebase.firestore();
 var moment = require('moment')
 
 quoteModel.placeOnHold = (data) =>{
-    data.status = "HOLD";
-    data.deadline = moment().day(0 + 7);
-    data.quoteAmount = "DUMMY";
+    data.body.status = "HOLD";
+    data.body.deadline = moment().day(0 + 7);
+    data.body.quoteAmount = "DUMMY";
+    data.body.uid = data.userInfo.uid
     return new Promise((resolve,reject) =>{
-        dbref.collection('quotations').add({...data}).then(result =>{
+        dbref.collection('quotations').add({...data.body}).then(result =>{
             resolve(result.id)
         }).catch(err =>{
             console.log("ERROR PLACING QUOTE ON HOLD", err)
@@ -17,9 +18,10 @@ quoteModel.placeOnHold = (data) =>{
     })
 }
 
-quoteModel.getAllQuotes = () =>{
+quoteModel.getAllQuotes = (data) =>{
     return new Promise((resolve,reject) =>{
-        dbref.collection("quotations").get().then(snapshot =>{
+        dbref.collection("quotations").where("uid","==",data.uid)
+        .get().then(snapshot =>{
             if(!snapshot.empty){
                 var data = []
                 snapshot.forEach(snap =>{

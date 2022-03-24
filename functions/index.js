@@ -3,7 +3,7 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 const cors = require('cors')
 
-//app.use(require("./middlewares/authMiddleWare"));
+app.use(require("./middlewares/authMiddleWare"));
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(cors())

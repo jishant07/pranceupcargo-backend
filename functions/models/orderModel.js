@@ -3,10 +3,11 @@ var firebase = require('../database')
 var dbref = firebase.firestore();
 
 orderModel.placeOrder = (data) =>{
-    data.orderStatus = "PLACED";
-    data.cost = "DUMMY";
+    data.body.orderStatus = "PLACED";
+    data.body.cost = "DUMMY";
+    data.body.uid = data.userInfo.uid;
     return new Promise((resolve,reject) =>{
-        dbref.collection('orders').add({...data}).then(result =>{
+        dbref.collection('orders').add({...data.body}).then(result =>{
             resolve(result)
         }).catch(err =>{
             console.log("ERROR PLACING ORDER", err)
@@ -15,9 +16,9 @@ orderModel.placeOrder = (data) =>{
     })
 }
 
-orderModel.listOrders = () =>{
+orderModel.listOrders = (userInfo) =>{
     return new Promise((resolve,reject) =>{
-        dbref.collection('orders').get().then(snapshot =>{
+        dbref.collection('orders').where("uid","==",userInfo.uid).get().then(snapshot =>{
             if(!snapshot.empty){
                 var data = []
                 snapshot.forEach(snap =>{

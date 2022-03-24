@@ -3,7 +3,8 @@ var orderModel = require('../models/orderModel')
 var globalModel = require('../models/globalModel')
 
 orderController.placeOrder = (req,res) =>{
-    orderModel.placeOrder(req.body).then(result =>{
+    var data = {body:req.body,userInfo:req.userInfo}
+    orderModel.placeOrder(data).then(result =>{
         res.json(globalModel.success(result.id))
     }).catch(err =>{
         console.log("ERROR PLACING ORDER", err);
@@ -12,7 +13,7 @@ orderController.placeOrder = (req,res) =>{
 }
 
 orderController.listOrders = (req,res) =>{
-    orderModel.listOrders().then(result =>{
+    orderModel.listOrders(req.userInfo).then(result =>{
         res.json(globalModel.success(result))
     }).catch(err =>{
         console.log("ERROR FETCHING ORDERs",err)
