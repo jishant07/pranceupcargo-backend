@@ -3,14 +3,22 @@ var firebase = require('../database')
 var dbref = firebase.firestore();
 
 priceModel.addPriceToPort = (data) =>{
+    let tempCostObj = {
+        hazCost : {
+            normal : data.hazNormal,
+            express : data.hazExpress
+        },
+        genCost : {
+            normal : data.genNormal,
+            express : data.genExpress
+        }
+    }
     return new Promise((resolve,reject) =>{
-        if(data.placeId && data.portId){
-            dbref.collection('locations').doc(data.placeId)
-            .collection('ports').doc(data.portId).set({normal:data.normal,express:data.express},{merge:true}).then(result =>{
-                resolve("Price added to the Port")
+        if(data.portId){
+            dbref.collection("ports").doc(data.portId).set(tempCostObj,{merge : true}).then(result =>{
+                resolve(result)
             }).catch(err =>{
-                console.log("ERROR ADDING PRICE TO THE PORT",err)
-                reject("Price Adding Error")
+                console.log("ADDING COST TO PORT ERR", err)
             })
         }else{
             reject("Incomplete Request")
@@ -19,14 +27,23 @@ priceModel.addPriceToPort = (data) =>{
 }
 
 priceModel.addPriceToAirport = (data) =>{
+    let tempCostObj = {
+        hazCost : {
+            normal : data.hazNormal,
+            express : data.hazExpress
+        },
+        genCost : {
+            normal : data.genNormal,
+            express : data.genExpress
+        }
+    }
     return new Promise((resolve,reject) =>{
-        if(data.placeId && data.airportId){
-            dbref.collection('locations').doc(data.placeId)
-            .collection('airports').doc(data.airportId).set({normal:data.normal,express:data.express},{merge:true}).then(result =>{
-                resolve("Price added to the Airport")
+        if(data.airportId){
+            dbref.collection('airports').doc(data.airportId).set(tempCostObj,{merge : true}).then(result =>{
+                resolve(result)
             }).catch(err =>{
-                console.log("ERROR ADDING PRICE TO THE AIRPORT",err)
-                reject("Price Adding Error")
+                console.log("ADDING PRICE ERR", err)
+                reject(err)
             })
         }else{
             reject("Incomplete Request")

@@ -2,99 +2,67 @@ const firebase = require("../database")
 let appModel = {}
 let dbref = firebase.firestore();
 
-appModel.addCountry = (data) =>{
-    return new Promise((resolve,reject) =>{
-        dbref.collection('locations').add(data).then(result =>{
+appModel.addAirport = (body) =>{
+    return new Promise((resolve, reject) =>{
+        dbref.collection('airports').add({...body}).then(result =>{
             resolve(result.id)
         }).catch(err =>{
-            console.log("COUNTRY ADD ERROR", err)
-            reject(err)
-        })  
-    })
-}
-
-appModel.addPortToCountry = (data) =>{
-    return new Promise((resolve,reject) =>{
-        if(data.placeId){
-            dbref.collection('locations').doc(data.placeId)
-            .collection('ports')
-            .add(data)
-            .then(result =>{
-                resolve(result.id)
-            }).catch(err =>{
-                console.log("PORT ADD TO COUNTRY ERROR",err)
-                reject(err)
-            })
-        }else{
-            reject("Incomplete Request")
-        }
-    })
-}
-
-appModel.addAirportToCountry = (data) =>{
-    return new Promise((resolve,reject) =>{
-        if(data.placeId){
-            dbref.collection('locations').doc(data.placeId)
-            .collection('airports')
-            .add(data)
-            .then(result =>{
-                resolve(result.id)
-            }).catch(err =>{
-                console.log("PORT ADD TO COUNTRY ERROR",err)
-                reject(err)
-            })
-        }else{
-            reject("Incomplete Request")
-        }
-    })
-}
-
-appModel.getPorts = (placeId) =>{
-    return new Promise((resolve,reject) =>{
-        dbref.collection('locations')
-        .doc(placeId).collection('ports')
-        .get()
-        .then(snapshot =>{
-            let portList = []
-            snapshot.forEach(snap =>{
-                portList.push({id:snap.id,...snap.data()})
-            })
-            resolve(portList)
-        }).catch(err =>{
-            console.log("PORT FETCH ERROR", err)
+            console.log("ADDING AIRPORT ERR", err)
             reject(err)
         })
     })
 }
 
-appModel.getAirports = (placeId) =>{
+appModel.addPort = (body) => {
+    return new Promise((resolve, reject) =>{
+        dbref.collection('ports').add({...body}).then(result =>{
+            resolve(result.id)
+        }).catch(err =>{
+            console.log("ADDING PORT ERR ", err)
+            reject(err)
+        })
+    })
+}
+
+appModel.listAirports = () =>{
+    return new Promise((resolve,reject) =>{
+        dbref.collection('airports').get().then(snapshot =>{
+            if(snapshot.empty){
+                reject("No Airports Found")
+            }else{
+                var airportList = []
+                snapshot.forEach(snap =>{
+                    airportList.push({
+                        id : snap.id,
+                        ...snap.data()
+                    })
+                })
+                resolve(airportList)
+            }
+        }).catch(err =>{
+            console.log("LISTING AIRPORTS ERR ", err)
+            reject(err)
+        })
+    })
+}
+
+appModel.listPorts = () =>{
     return new Promise((resolve,reject)=>{
-        dbref.collection('locations')
-        .doc(placeId).collection('airports')
-        .get()
-        .then(snapshot =>{
-            let airportList = []
-            snapshot.forEach(snap =>{
-                airportList.push({id:snap.id,...snap.data()})
-            })
-            resolve(airportList)
+        dbref.collection('ports').get().then(snapshot =>{
+            if(snapshot.empty){
+                reject("No Ports Found")
+            }else{
+                var portList = []
+                snapshot.forEach(snap =>{
+                    portList.push({
+                        id : snap.id,
+                        ...snap.data()
+                    })
+                })
+                resolve(portList)
+            }
         }).catch(err =>{
-            console.log("AIRPORT GET ERROR", err)
-            reject(err)
-        })
-    })
-}
-
-appModel.listCountries = () =>{
-    return new Promise((resolve,reject) =>{
-        dbref.collection('locations').get().then(snapshot =>{
-            let countryList = []
-            snapshot.forEach(snap =>{
-                countryList.push({id:snap.id,...snap.data()})
-            })
-            resolve(countryList)
-        }).catch(err =>{
-            console.log("GETTING COUNTRIES ERROR",err)
+            console.log("LISTING PORTS ERR", err)
             reject(err)
         })
     })

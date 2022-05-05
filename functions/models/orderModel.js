@@ -17,20 +17,31 @@ orderModel.placeOrder = (data) =>{
 }
 
 orderModel.listOrders = (userInfo) =>{
-    return new Promise((resolve,reject) =>{
-        dbref.collection('orders').where("uid","==",userInfo.uid).get().then(snapshot =>{
-            if(!snapshot.empty){
-                var data = []
-                snapshot.forEach(snap =>{
-                    data.push({id:snap.id,data:snap.data()})
-                })
-                resolve(data)
+    return new Promise(async (resolve,reject) =>{
+        var userDocument = await dbref.collection('users').doc(userInfo.uid).get()
+        let userData = userDocument.data();
+        let orderPromise;
+        if(userData.isAdmin && userData.isAdmin == true){
+            orderPromise = dbref.collection("orders").get()
+        }else{
+            orderPromise = dbref.collection("orders").where("uid","==", userDocument.id).get()
+        }
+        orderPromise.then(snapshot =>{
+            if(snapshot.empty){
+                reject("No Orders Found")
             }else{
-                resolve("No Orders found")
+                var orderList = []
+                snapshot.forEach(snap =>{
+                    orderList.push({
+                        id : snap.id,
+                        ...snap.data(0)
+                    })
+                })
+                resolve(orderList)
             }
         }).catch(err =>{
-            console.log("ERROR FETCHING ORDERS", err);
-            reject(err);
+            console.log("LIST ORDERS ERR", err)
+            reject(err)
         })
     })
 }
