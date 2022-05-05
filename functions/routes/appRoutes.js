@@ -7,4 +7,7 @@ appRouter.route("/addPort").post(adminMiddleWare,appController.addPort)
 appRouter.route("/listPorts").get(adminMiddleWare,appController.listPorts)
 appRouter.route("/listAirports").get(adminMiddleWare,appController.listAirports)
 
+appRouter.route("/getPortById").post(adminMiddleWare,appController.getPortById)
+appRouter.route("/getAirportById").post(adminMiddleWare, appController.getAirportById)
+
 module.exports = appRouter;

@@ -4,13 +4,13 @@ var dbref = firebase.firestore();
 
 priceModel.addPriceToPort = (data) =>{
     let tempCostObj = {
-        hazCost : {
-            normal : data.hazNormal,
-            express : data.hazExpress
+        normal : {
+            haz : data.hazNormal,
+            gen : data.genNormal
         },
-        genCost : {
-            normal : data.genNormal,
-            express : data.genExpress
+        express : {
+            haz : data.hazExpress,
+            gen : data.genExpress
         }
     }
     return new Promise((resolve,reject) =>{
@@ -28,13 +28,13 @@ priceModel.addPriceToPort = (data) =>{
 
 priceModel.addPriceToAirport = (data) =>{
     let tempCostObj = {
-        hazCost : {
-            normal : data.hazNormal,
-            express : data.hazExpress
+        normal : {
+            haz : data.hazNormal,
+            gen : data.genNormal
         },
-        genCost : {
-            normal : data.genNormal,
-            express : data.genExpress
+        express : {
+            haz : data.hazExpress,
+            gen : data.genExpress
         }
     }
     return new Promise((resolve,reject) =>{

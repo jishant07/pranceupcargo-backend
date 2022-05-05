@@ -68,4 +68,34 @@ appModel.listPorts = () =>{
     })
 }
 
+appModel.getPortById = (data) =>{
+    return new Promise((resolve,reject) =>{
+        if(data.portId){
+            dbref.collection("ports").doc(data.portId).get().then(snap =>{
+                resolve({...snap.data()})
+            }).catch(err =>{
+                console.log("DB ERR IN GETTING PORT BY ID", err)
+                reject(err)
+            })
+        }else{
+            reject("Incomplete Request")
+        }
+    })
+}
+
+appModel.getAirportById = (data) =>{
+    return new Promise((resolve,reject) =>{
+        if(data.airportId){
+            dbref.collection("airports").doc(data.airportId).get().then(snap =>{
+                resolve({...snap.data()})
+            }).catch(err =>{
+                console.log("DB ERR IN GETTING AIRPORT BY ID", err)
+                reject(err)
+            })
+        }else{
+            reject("Incomplete Request")
+        }
+    })
+}
+
 module.exports = appModel;

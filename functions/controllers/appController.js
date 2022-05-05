@@ -34,4 +34,22 @@ appController.listPorts = (req,res) =>{
     })
 }
 
+appController.getPortById = (req,res) =>{
+    appModel.getPortById(req.body).then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        console.log("GETTING PORT BY ID ERR", err)
+        res.json(globalModel.failure(err))
+    })
+}
+
+appController.getAirportById = (req,res) =>{
+    appModel.getAirportById(req.body).then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        console.log("GETTING PORT BY ID ERR", err)
+        res.json(globalModel.failure(err))
+    })
+}
+
 module.exports = appController
