@@ -52,4 +52,20 @@ appController.getAirportById = (req,res) =>{
     })
 }
 
+appController.getIndianPorts = (req,res) =>{
+    appModel.getIndianPorts().then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        res.json(globalModel.failure(err))
+    })
+}
+
+appController.getIndianAirPorts = (req,res) =>{
+    appModel.getIndianAirports().then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        res.json(globalModel.failure(err))
+    })
+}
+
 module.exports = appController

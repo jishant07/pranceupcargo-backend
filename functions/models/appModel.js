@@ -98,4 +98,46 @@ appModel.getAirportById = (data) =>{
     })
 }
 
+appModel.getIndianPorts = () =>{
+    return new Promise((resolve,reject) =>{
+        dbref.collection("ports").where("country", "==", "India").get().then(snapshot =>{
+            if(snapshot.empty){
+                reject("No Indian Ports Found")
+            }else{
+                var portList = []
+                snapshot.forEach(snap =>{
+                    portList.push({
+                        id : snap.id,
+                        ...snap.data()
+                    })
+                })
+                resolve(portList)
+            }
+        }).catch(err =>{
+            console.log("ERROR IN GETTING INDIAN PORTs" , err)
+        })
+    })
+}
+
+appModel.getIndianAirports = () =>{
+    return new Promise((resolve,reject) =>{
+        dbref.collection("airports").where("country", "==", "India").get().then(snapshot =>{
+            if(snapshot.empty){
+                reject("No Indian AirPOrts Found")
+            }else{
+                var portList = []
+                snapshot.forEach(snap =>{
+                    portList.push({
+                        id : snap.id,
+                        ...snap.data()
+                    })
+                })
+                resolve(portList)
+            }
+        }).catch(err =>{
+            console.log("ERROR IN GETTING INDIAN AIRPORTs" , err)
+        })
+    })
+}
+
 module.exports = appModel;

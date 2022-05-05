@@ -10,4 +10,7 @@ appRouter.route("/listAirports").get(adminMiddleWare,appController.listAirports)
 appRouter.route("/getPortById").post(adminMiddleWare,appController.getPortById)
 appRouter.route("/getAirportById").post(adminMiddleWare, appController.getAirportById)
 
+appRouter.route("/getIndianPorts").get(appController.getIndianPorts)
+appRouter.route("/getIndianAirPorts").get(appController.getIndianAirPorts)
+
 module.exports = appRouter;
