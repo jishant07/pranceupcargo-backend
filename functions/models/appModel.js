@@ -26,7 +26,7 @@ appModel.addPort = (body) => {
 
 appModel.listAirports = () =>{
     return new Promise((resolve,reject) =>{
-        dbref.collection('airports').get().then(snapshot =>{
+        dbref.collection('airports').where("country", "!=", "India").get().then(snapshot =>{
             if(snapshot.empty){
                 reject("No Airports Found")
             }else{
@@ -48,7 +48,7 @@ appModel.listAirports = () =>{
 
 appModel.listPorts = () =>{
     return new Promise((resolve,reject)=>{
-        dbref.collection('ports').get().then(snapshot =>{
+        dbref.collection('ports').where("country", "!=", "India").get().then(snapshot =>{
             if(snapshot.empty){
                 reject("No Ports Found")
             }else{
