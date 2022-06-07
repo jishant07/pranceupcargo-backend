@@ -4,8 +4,9 @@ var dbref = firebase.firestore();
 var moment = require('moment')
 
 quoteModel.placeOnHold = (data) =>{
+    console.log(data)
     data.body.status = "HOLD";
-    data.body.deadline = moment().day(0 + 7);
+    data.body.deadline = moment().day(0 + 7).format("YYYY-MM-DD");
     data.body.quoteAmount = "DUMMY";
     data.body.uid = data.userInfo.uid
     return new Promise((resolve,reject) =>{

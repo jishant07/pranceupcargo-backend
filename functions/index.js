@@ -8,6 +8,8 @@ app.use(bodyParser.json())
 app.use(cors())
 app.use(require("./middlewares/authMiddleWare"));
 
+require("./controllers/cronController");
+
 app.use("/app",require("./routes/appRoutes"))
 app.use("/auth",require("./routes/authRoutes"))
 app.use("/price",require("./routes/priceRoutes"))
