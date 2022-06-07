@@ -29,7 +29,21 @@ var setQuoteInvalid = () =>{
         async.eachSeries(quoteList, (quote,eachcallback)=>{
             var start = moment(quote.deadline)
             var end = moment(new Date())
-            console.log(moment.duration(start.diff(end)).asDays())
-        })
+            if(moment.duration(start.diff(end)).asDays() <= 0){
+                dbref.collection('quotations').doc(quote.id).update(
+                    {status : "EXPIRED"}
+                ).then(updateResult =>{
+                    eachcallback();
+                }).catch(err =>{
+                    eachcallback(err)
+                })
+            }
+        },(err =>{
+            if(err){
+                console.log("CRON RUN ERROR", err)
+            }else{
+                console.log("CRON RUN SUCCESSFUL!")
+            }
+        }))
     })
 }
