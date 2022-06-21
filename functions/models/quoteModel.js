@@ -3,6 +3,7 @@ var firebase = require('../database')
 var dbref = firebase.firestore();
 var moment = require('moment')
 var _ = require('underscore')
+var async = require('async')
 
 quoteModel.placeOnHold = (data) =>{
     data.body.status = "ACTIVE";
@@ -101,7 +102,65 @@ quoteModel.getAllQuotes = (data) =>{
                 snapshot.forEach(snap =>{
                     data.push({id:snap.id,data:snap.data()})
                 })
-                resolve(data)
+                var finalQuoteArray = []
+                var promiseArray = []
+                async.eachSeries(data, (eachQuote, eachCallback)=>{
+                    if(eachQuote.data.modeOfTransport == "SEA"){
+                        promiseArray.push(dbref.collection('ports').doc(eachQuote.data.portOfOrigin).get())
+                        promiseArray.push(dbref.collection('ports').doc(eachQuote.data.destinationPort).get())
+                        Promise.all(promiseArray).then(resultArray =>{
+                            resultArray[0] = resultArray[0].data()
+                            resultArray[1] = resultArray[1].data()
+                            finalQuoteArray.push({   
+                                ...eachQuote, 
+                                originData : {
+                                    country: resultArray[0].country, 
+                                    portName : resultArray[0].portName, 
+                                    state : resultArray[0].state
+                                }, 
+                                destinationData :  {
+                                    country: resultArray[1].country, 
+                                    portName : resultArray[1].portName, 
+                                    state : resultArray[1].state
+                                }
+                            })
+                            eachCallback();
+                        }).catch(errArray =>{
+                            eachCallback(errArray)
+                        })
+                    }else{
+                        promiseArray.push(dbref.collection('airports').doc(eachQuote.data.airportOfOrigin).get())
+                        promiseArray.push(dbref.collection('airports').doc(eachQuote.data.destinationAirport).get())
+                        Promise.all(promiseArray).then(resultArray =>{
+                            resultArray[0] = resultArray[0].data()
+                            resultArray[1] = resultArray[1].data()
+                            finalQuoteArray.push({
+                                ...eachQuote,
+                                origin : {
+                                    airportTag : resultArray[0].airportTag,
+                                    airportName : resultArray[0].airportName,
+                                    state : resultArray[0].state,
+                                    country : resultArray[0].country
+                                },
+                                destination : {
+                                    airportTag : resultArray[1].airportTag,
+                                    airportName : resultArray[1].airportName,
+                                    state : resultArray[1].state,
+                                    country : resultArray[1].country
+                                }
+                            })
+                            eachCallback();
+                        }).catch(errArray =>{
+                            eachCallback(errArray)
+                        })
+                    }
+                },(err) =>{
+                    if(err){
+                        reject(err)
+                    }else{
+                        resolve(finalQuoteArray)
+                    }
+                })
             }else{
                 resolve("No Quotes found")
             }
