@@ -100,15 +100,15 @@ quoteModel.getAllQuotes = (data) =>{
             if(!snapshot.empty){
                 var data = []
                 snapshot.forEach(snap =>{
-                    data.push({id:snap.id,data:snap.data()})
+                    data.push({...snap.data(), id:snap.id})
                 })
                 var finalQuoteArray = []
                 var promiseArray = []
                 async.eachSeries(data, (eachQuote, eachCallback)=>{
                     promiseArray = []
-                    if(eachQuote.data.modeOfTransport == "SEA"){
-                        promiseArray.push(dbref.collection('ports').doc(eachQuote.data.portOfOrigin).get())
-                        promiseArray.push(dbref.collection('ports').doc(eachQuote.data.destinationPort).get())
+                    if(eachQuote.modeOfTransport == "SEA"){
+                        promiseArray.push(dbref.collection('ports').doc(eachQuote.portOfOrigin).get())
+                        promiseArray.push(dbref.collection('ports').doc(eachQuote.destinationPort).get())
                         Promise.all(promiseArray).then(resultArray =>{
                             resultArray[0] = resultArray[0].data()
                             resultArray[1] = resultArray[1].data()
@@ -126,8 +126,8 @@ quoteModel.getAllQuotes = (data) =>{
                             eachCallback(errArray)
                         })
                     }else{
-                        promiseArray.push(dbref.collection('airports').doc(eachQuote.data.airportOfOrigin).get())
-                        promiseArray.push(dbref.collection('airports').doc(eachQuote.data.destinationAirport).get())
+                        promiseArray.push(dbref.collection('airports').doc(eachQuote.airportOfOrigin).get())
+                        promiseArray.push(dbref.collection('airports').doc(eachQuote.destinationAirport).get())
                         Promise.all(promiseArray).then(resultArray =>{
                             resultArray[0] = resultArray[0].data()
                             resultArray[1] = resultArray[1].data()
