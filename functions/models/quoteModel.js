@@ -10,7 +10,7 @@ quoteModel.placeOnHold = (data) =>{
     data.body.deadline = moment().day(0 + 7).format("YYYY-MM-DD");
     data.body.uid = data.userInfo.uid
     return new Promise(async (resolve,reject) =>{
-        data.body.quoteAmount = await getCost(data.body).catch(err =>{
+        data.body.quoteAmount = await quoteModel.getCost(data.body).catch(err =>{
             rejct(err)
         });
         dbref.collection('quotations').add({...data.body}).then(result =>{
@@ -22,7 +22,7 @@ quoteModel.placeOnHold = (data) =>{
     })
 }
 
-const getCost = (body) =>{
+quoteModel.getCost = (body) =>{
     return new Promise(async (resolve, reject) =>{
         var costObject
         if(body.modeOfTransport == "SEA"){
@@ -105,6 +105,7 @@ quoteModel.getAllQuotes = (data) =>{
                 var finalQuoteArray = []
                 var promiseArray = []
                 async.eachSeries(data, (eachQuote, eachCallback)=>{
+                    promiseArray = []
                     if(eachQuote.data.modeOfTransport == "SEA"){
                         promiseArray.push(dbref.collection('ports').doc(eachQuote.data.portOfOrigin).get())
                         promiseArray.push(dbref.collection('ports').doc(eachQuote.data.destinationPort).get())
@@ -112,17 +113,13 @@ quoteModel.getAllQuotes = (data) =>{
                             resultArray[0] = resultArray[0].data()
                             resultArray[1] = resultArray[1].data()
                             finalQuoteArray.push({   
-                                ...eachQuote, 
-                                originData : {
-                                    country: resultArray[0].country, 
-                                    portName : resultArray[0].portName, 
-                                    state : resultArray[0].state
-                                }, 
-                                destinationData :  {
-                                    country: resultArray[1].country, 
-                                    portName : resultArray[1].portName, 
-                                    state : resultArray[1].state
-                                }
+                                ...eachQuote,
+                                originCountry : resultArray[0].country,
+                                originPortName : resultArray[0].portName,
+                                state : resultArray[0].state,
+                                destinationCountry : resultArray[1].country,
+                                destinationPortName : resultArray[1].portName,
+                                destinationState : resultArray[1].state
                             })
                             eachCallback();
                         }).catch(errArray =>{
@@ -136,18 +133,14 @@ quoteModel.getAllQuotes = (data) =>{
                             resultArray[1] = resultArray[1].data()
                             finalQuoteArray.push({
                                 ...eachQuote,
-                                origin : {
-                                    airportTag : resultArray[0].airportTag,
-                                    airportName : resultArray[0].airportName,
-                                    state : resultArray[0].state,
-                                    country : resultArray[0].country
-                                },
-                                destination : {
-                                    airportTag : resultArray[1].airportTag,
-                                    airportName : resultArray[1].airportName,
-                                    state : resultArray[1].state,
-                                    country : resultArray[1].country
-                                }
+                                originAirportTag : resultArray[0].airportTag,
+                                originAirportName : resultArray[0].airportName,
+                                originState : resultArray[0].state,
+                                originCountry : resultArray[0].country,
+                                destinationAirportTag : resultArray[1].airportTag,
+                                destinationAirportName : resultArray[1].airportName,
+                                destinationState : resultArray[1].state,
+                                destinationCountry : resultArray[1].country
                             })
                             eachCallback();
                         }).catch(errArray =>{

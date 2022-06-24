@@ -1,16 +1,42 @@
 var orderModel = {}
 var firebase = require('../database')
+var quoteModel = require("../models/quoteModel")
+
 var dbref = firebase.firestore();
 
-orderModel.placeOrder = (data) =>{
-    data.body.orderStatus = "PLACED";
-    data.body.cost = "DUMMY";
-    data.body.uid = data.userInfo.uid;
-    return new Promise((resolve,reject) =>{
-        dbref.collection('orders').add({...data.body}).then(result =>{
-            resolve(result)
+orderModel.placeNewOrder = (body,files,uid) =>{
+    return new Promise(async (resolve, reject) =>{
+        body.orderAmount = await quoteModel.getCost(body).catch(err =>{
+            reject(err)
+        })
+        dbref.collection('orders').add({...body, uid}).then(result =>{
+            var orderId = result.id;
+            var fileData = {}
+            var uploadArray = []
+            files.forEach(file =>{
+                var serverFileLocation = `${orderId}/${file.fieldname}`
+                uploadArray.push(orderModel.uploadDocument(file.buffer, serverFileLocation, file.fieldname))
+                fileData[file.fieldname] = serverFileLocation
+            })
+            Promise.all(uploadArray).then(fileArray =>{
+                resolve(fileArray)
+            }).catch(err =>{
+                console.log("FILE UPLOAD ERROR", err)
+                reject(err)
+            })
         }).catch(err =>{
-            console.log("ERROR PLACING ORDER", err)
+            console.log("PLACING NEW ORDER ERROR", err)
+        })
+    })
+}
+
+orderModel.uploadDocument = (localFileBuffer, serverFileLocation, fieldName) =>{
+    var storage_ref = firebase.storage().bucket("gs://pranceup-cargo.appspot.com")
+    const file = storage_ref.file(serverFileLocation)
+    return new Promise((resolve, reject) =>{
+        file.save(localFileBuffer).then(()=>{
+            resolve({[fieldName]: serverFileLocation})
+        }).catch(err =>{
             reject(err)
         })
     })
