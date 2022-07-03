@@ -3,8 +3,8 @@ var orderModel = require('../models/orderModel')
 var globalModel = require('../models/globalModel')
 
 orderController.placeNewOrder = (req, res) =>{
-    orderModel.placeNewOrder(req.body,req.files,req.userInfo.uid).then(result =>{
-        res.json(globalModel.success(result))
+    orderModel.placeNewOrder(JSON.parse(req.body.body),req.files,req.userInfo.uid).then(result =>{
+        res.json(globalModel.success("Order Placed Successfully"))
     }).catch(err =>{
         res.json(globalModel.failure(err))
     })

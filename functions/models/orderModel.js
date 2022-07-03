@@ -18,6 +18,7 @@ orderModel.placeNewOrder = (body,files,uid) =>{
                 uploadArray.push(orderModel.uploadDocument(file.buffer, serverFileLocation, file.fieldname))
                 fileData[file.fieldname] = serverFileLocation
             })
+            uploadArray.push(dbref.collection('orders').doc(orderId).update({"files": {...fileData}}))
             Promise.all(uploadArray).then(fileArray =>{
                 resolve(fileArray)
             }).catch(err =>{
