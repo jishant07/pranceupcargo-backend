@@ -6,7 +6,7 @@ var async = require('async')
 var runcron = true;
 
 if(runcron){
-    cron.schedule("0 0 * * 7",()=>{
+    cron.schedule("0 0 * * 0",()=>{
         setQuoteInvalid();
     },{
         timezone:"Asia/Kolkata",
