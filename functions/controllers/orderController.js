@@ -11,12 +11,17 @@ orderController.placeNewOrder = (req, res) =>{
 }
 
 orderController.listOrders = (req,res) =>{
-    orderModel.listOrders(req.userInfo).then(result =>{
-        res.json(globalModel.success(result))
-    }).catch(err =>{
-        console.log("ERROR FETCHING ORDERs",err)
-        res.json(globalModel.failure(err))
-    })
+    if(req.query.orderState)
+    {
+        orderModel.listOrders(req.query.orderState,req.userInfo).then(result =>{
+            res.json(globalModel.success(result))
+        }).catch(err =>{
+            console.log("ERROR FETCHING ORDERs",err)
+            res.json(globalModel.failure(err))
+        })
+    }else{
+        res.json(globalModel.failure("Incomplete Request"))
+    }
 }
 
 orderController.getOrderById = (req,res) =>{

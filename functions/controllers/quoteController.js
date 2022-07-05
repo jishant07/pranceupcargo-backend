@@ -12,9 +12,10 @@ quoteController.placeOnHold = (req,res) =>{
 }
 
 quoteController.getAllQuotes = (req,res) => {
-    quoteModel.getAllQuotes(req.userInfo).then(result =>{
+    quoteModel.getAllQuotes(req.query.quoteState,req.userInfo).then(result =>{
         res.json(globalModel.success(result))
     }).catch(err =>{
+        console.log(err)
         res.json(globalModel.failure(err))
     })
 }

@@ -93,10 +93,18 @@ quoteModel.getCost = (body) =>{
     })
 }
 
-quoteModel.getAllQuotes = (data) =>{
+quoteModel.getAllQuotes = (quoteState,data) =>{
     return new Promise((resolve,reject) =>{
-        dbref.collection("quotations").where("uid","==",data.uid)
-        .get().then(snapshot =>{
+        let quotePromise;
+        if(quoteState && quoteState == "ACTIVE")
+        {
+            quotePromise = dbref.collection("quotations").where("uid","==", data.uid).where("status","==", "ACTIVE").get()
+
+        }else if(quoteState && quoteState == "EXPIRED"){
+            
+            quotePromise = dbref.collection("quotations").where("uid","==", data.uid).where("status","==", "EXPIRED").get()
+        }
+        quotePromise.then(snapshot =>{
             if(!snapshot.empty){
                 var data = []
                 snapshot.forEach(snap =>{
@@ -116,7 +124,7 @@ quoteModel.getAllQuotes = (data) =>{
                                 ...eachQuote,
                                 originCountry : resultArray[0].country,
                                 originPortName : resultArray[0].portName,
-                                state : resultArray[0].state,
+                                originState : resultArray[0].state,
                                 destinationCountry : resultArray[1].country,
                                 destinationPortName : resultArray[1].portName,
                                 destinationState : resultArray[1].state
