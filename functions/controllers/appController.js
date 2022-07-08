@@ -68,4 +68,40 @@ appController.getIndianAirPorts = (req,res) =>{
     })
 }
 
+appController.getAllPorts = (req,res) =>{
+    appModel.getAllPorts().then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        console.log("Get All Ports List error", err)
+        res.json(globalModel.failure(err))
+    })
+}
+
+appController.getAllAirports = (req, res) =>{
+    appModel.getAllAirports().then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        console.log("Get All Airports List Error", err)
+        res.json(globalModel.failure(err))
+    })
+}
+
+appController.editPort = (req, res) =>{
+    appModel.editPort(req.body).then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        console.log("EDIT PORT ERROR", err)
+        res.json(globalModel.failure(err))
+    })
+}
+
+appController.editAirport = (req, res) =>{
+    appModel.editAirport(req.body).then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        console.log("EDIT AIRPORT ERROR", err)
+        res.json(globalModel.failure(err))
+    })
+}
+
 module.exports = appController

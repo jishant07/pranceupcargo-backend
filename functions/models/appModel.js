@@ -140,4 +140,62 @@ appModel.getIndianAirports = () =>{
     })
 }
 
+appModel.getAllPorts = () =>{
+    return new Promise((resolve, reject) =>{
+        dbref.collection('ports').get().then(snapshot =>{
+            var portList = []
+            snapshot.forEach(snap =>{
+                portList.push({
+                    id: snap.id,
+                    ...snap.data()
+                })
+            })
+            resolve(portList)
+        }).catch(err =>{
+            reject(err)
+        })
+    })
+}
+
+appModel.getAllAirports = () =>{
+    return new Promise((resolve, reject) =>{
+        dbref.collection('airports').get().then(snapshot =>{
+            var airportList = []
+            snapshot.forEach(snap =>{
+                airportList.push({
+                    id: snap.id,
+                    ...snap.data()
+                })
+            })
+            resolve(airportList)
+        }).catch(err =>{
+            reject(err)
+        })
+    })
+}
+
+appModel.editPort = (body) =>{
+    return new Promise((resolve,reject) =>{
+        var portId = body.portId
+        delete body.portId
+        dbref.collection("ports").doc(portId).set({...body},{merge:true}).then(result =>{
+            resolve(result)
+        }).catch(err =>{
+            reject(err)
+        })
+    })
+}
+
+appModel.editAirport = (body) =>{
+    return new Promise((resolve,reject) =>{
+        var airportId = body.airportId
+        delete body.airportId
+        dbref.collection("airports").doc(airportId).set({...body},{merge : true}).then(result =>{
+            resolve(result)
+        }).catch(err =>{
+            reject(err)
+        })
+    })
+}
+
 module.exports = appModel;
