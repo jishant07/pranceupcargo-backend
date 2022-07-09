@@ -104,4 +104,21 @@ appController.editAirport = (req, res) =>{
     })
 }
 
+appController.getUsers = (req,res) =>{
+    appModel.getUsers().then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        res.json(globalModel.failure(err))
+    })
+}
+
+appController.editUser = (req, res) =>{
+    appModel.editUser(req.body).then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        console.log("ERROR IN EDITING USER", err)
+        res.json(globalModel.failure(err))
+    })
+}
+
 module.exports = appController

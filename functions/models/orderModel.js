@@ -150,4 +150,71 @@ orderModel.getOrderById = (orderId) =>{
     })
 }
 
+orderModel.editOrder = (body) =>{
+    return new Promise((resolve, reject) =>{
+        var orderId = body.orderId
+        delete body.orderId
+        dbref.collection('orders').doc(orderId).set({...body},{merge:true}).then(result =>{
+            resolve(result)
+        }).catch(err =>{
+            reject(err)
+        })
+    })
+}
+
+orderModel.getSignedUrl = (fileLink) =>{
+    return new Promise((resolve, reject) =>{
+        orderModel.signUrl(fileLink).then(url =>{
+            resolve(url)
+        }).catch(err =>{
+            reject(err)
+        })
+    })
+}
+
+orderModel.signUrl = (file_location, time = 1000 * 60 * 60) => {
+    const bucket = firebase.storage().bucket("gs://pranceup-cargo.appspot.com");
+    const file = bucket.file(file_location);
+    const options = {
+      version: "v4", // defaults to 'v2' if missing.
+      action: "read",
+      expires: Date.now() + time, // one hour
+    };
+    return new Promise((resolve,reject) =>{
+        file.exists().then(() =>{
+            file.getSignedUrl(options).then(url =>{
+                resolve(url[0])
+            }).catch(err =>{
+                console.log("FILE SIGNING ERROR",err)
+                reject(err);
+            })
+        }).catch(err =>{
+            console.log("FILE EXIST ERROR",err)
+            reject(err)
+        })
+    })
+}
+
+orderModel.uploadNewDocument = (body, files) =>{
+    return new Promise((resolve, reject) =>{
+        dbref.collection('orders').doc(body.orderId).get().then(snap =>{
+            if(snap.exists){
+                var link = `${body.orderId}/${files[0].fieldname}.${files[0].originalname.split(".")[1]}`
+                var promiseArray = []
+                promiseArray.push(orderModel.uploadDocument(files[0].buffer, link, files[0].fieldname))
+                promiseArray.push(dbref.collection('orders').doc(body.orderId).set({files:{[files[0].fieldname]:link}},{merge:true}))
+                Promise.all(promiseArray).then(resultArray =>{
+                    resolve(resultArray)
+                }).catch(err =>{
+                    reject(err)
+                })
+            }else{
+                reject("Order ID not found")
+            }
+        }).catch(err =>{
+            reject(err)
+        })
+    })
+}
+
 module.exports = orderModel

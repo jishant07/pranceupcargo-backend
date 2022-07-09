@@ -26,7 +26,7 @@ appModel.addPort = (body) => {
 
 appModel.listAirports = () =>{
     return new Promise((resolve,reject) =>{
-        dbref.collection('airports').where("country", "!=", "India").get().then(snapshot =>{
+        dbref.collection('airports').where("country", "!=", "India").where("isActive","==",true).get().then(snapshot =>{
             if(snapshot.empty){
                 reject("No Airports Found")
             }else{
@@ -48,7 +48,7 @@ appModel.listAirports = () =>{
 
 appModel.listPorts = () =>{
     return new Promise((resolve,reject)=>{
-        dbref.collection('ports').where("country", "!=", "India").get().then(snapshot =>{
+        dbref.collection('ports').where("country", "!=", "India").where("isActive","==",true).get().then(snapshot =>{
             if(snapshot.empty){
                 reject("No Ports Found")
             }else{
@@ -100,7 +100,7 @@ appModel.getAirportById = (data) =>{
 
 appModel.getIndianPorts = () =>{
     return new Promise((resolve,reject) =>{
-        dbref.collection("ports").where("country", "==", "India").get().then(snapshot =>{
+        dbref.collection("ports").where("country", "==", "India").where("isActive","==",true).get().then(snapshot =>{
             if(snapshot.empty){
                 reject("No Indian Ports Found")
             }else{
@@ -121,7 +121,7 @@ appModel.getIndianPorts = () =>{
 
 appModel.getIndianAirports = () =>{
     return new Promise((resolve,reject) =>{
-        dbref.collection("airports").where("country", "==", "India").get().then(snapshot =>{
+        dbref.collection("airports").where("country", "==", "India").where("isActive","==",true).get().then(snapshot =>{
             if(snapshot.empty){
                 reject("No Indian AirPOrts Found")
             }else{
@@ -191,6 +191,40 @@ appModel.editAirport = (body) =>{
         var airportId = body.airportId
         delete body.airportId
         dbref.collection("airports").doc(airportId).set({...body},{merge : true}).then(result =>{
+            resolve(result)
+        }).catch(err =>{
+            reject(err)
+        })
+    })
+}
+
+appModel.getUsers = () => {
+    return new Promise((resolve, reject) =>{
+        dbref.collection("users").where("isAdmin","!=", true).get()
+        .then(snapshot =>{
+            if(!snapshot.empty){
+                var userList = []
+                snapshot.forEach(snap =>{
+                    userList.push({
+                        id: snap.id,
+                        ...snap.data()
+                    })
+                })
+                resolve(userList)
+            }else{
+                reject("No Users Found")
+            }
+        }).catch(err =>{
+            reject(err)
+        })
+    })
+}
+
+appModel.editUser = (body) =>{
+    return new Promise((resolve, reject) =>{
+        var userId = body.userId
+        delete body.userId
+        dbref.collection('users').doc(userId).set({...body},{merge:true}).then(result =>{
             resolve(result)
         }).catch(err =>{
             reject(err)

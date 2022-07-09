@@ -32,4 +32,29 @@ orderController.getOrderById = (req,res) =>{
     })
 }
 
+orderController.editOrder = (req,res) =>{
+    orderModel.editOrder(req.body).then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        res.json(globalModel.failure(err))
+    })
+}
+
+orderController.getSignedUrl = (req, res) =>{
+    orderModel.getSignedUrl(req.body.fileLink).then(url =>{
+        res.json(globalModel.success(url))
+    }).catch(err =>{
+        console.log("File Signing Error", err)
+        res.json(globalModel.failure(err))
+    })
+}
+
+orderController.uploadNewFile = (req, res) =>{
+    orderModel.uploadNewDocument(JSON.parse(req.body.body), req.files).then(result =>{
+        res.json(globalModel.success(result))
+    }).catch(err =>{
+        res.json(globalModel.failure(err))
+    })
+}
+
 module.exports = orderController
