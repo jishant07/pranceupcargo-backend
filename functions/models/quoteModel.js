@@ -10,10 +10,14 @@ quoteModel.placeOnHold = (data) =>{
     data.body.deadline = moment().day(0 + 7).format("YYYY-MM-DD");
     data.body.uid = data.userInfo.uid
     return new Promise(async (resolve,reject) =>{
-        data.body.quoteAmount = await quoteModel.getCost(data.body).catch(err =>{
+        quoteObject = await quoteModel.getCost(data.body).catch(err =>{
             rejct(err)
         });
-        dbref.collection('quotations').add({...data.body}).then(result =>{
+        dbref.collection('quotations').add({
+            ...data.body, 
+            quoteCostUsed : quoteObject.tobeUsedCost, 
+            quoteAmount : quoteObject.calculatedCost
+        }).then(result =>{
             resolve(result.id)
         }).catch(err =>{
             console.log("ERROR PLACING QUOTE ON HOLD", err)
@@ -24,39 +28,46 @@ quoteModel.placeOnHold = (data) =>{
 
 quoteModel.getCost = (body) =>{
     return new Promise(async (resolve, reject) =>{
-        var costObject
-        if(body.modeOfTransport == "SEA"){
-            if(body.typeOfActivity == "Import"){
-                costObject = await dbref.collection('ports').doc(body.portOfOrigin).get().catch(err =>{
-                    reject(err)
-                })
-            }else{ 
-                costObject = await dbref.collection('ports').doc(body.destinationPort).get()
-                .catch(err =>{
-                    reject(err)
-                })
-            }
-        }else{
-            if(body.typeOfActivity == "Import"){
-                costObject = await dbref.collection('airports').doc(body.airportOfOrigin).get()
-                .catch(err =>{
-                    reject(err)
-                })
-            }else{
-                costObject = await dbref.collection('airports').doc(body.destinationAirport).get()
-                .catch(err =>{
-                    reject(err)
-                })
-            }
-        }
-        costObject = costObject.data();
+        var costObject;
         var tobeUsedCost;
-        if(body.deliveryType == "Normal"){
-            tobeUsedCost = costObject.normal
+        if(body.quoteType && body.quoteType == "ORDINARY"){
+            if(body.modeOfTransport == "SEA"){
+                if(body.typeOfActivity == "Import"){
+                    costObject = await dbref.collection('ports').doc(body.portOfOrigin).get().catch(err =>{
+                        reject(err)
+                    })
+                }else{ 
+                    costObject = await dbref.collection('ports').doc(body.destinationPort).get()
+                    .catch(err =>{
+                        reject(err)
+                    })
+                }
+            }else{
+                if(body.typeOfActivity == "Import"){
+                    costObject = await dbref.collection('airports').doc(body.airportOfOrigin).get()
+                    .catch(err =>{
+                        reject(err)
+                    })
+                }else{
+                    costObject = await dbref.collection('airports').doc(body.destinationAirport).get()
+                    .catch(err =>{
+                        reject(err)
+                    })
+                }
+            }
+            costObject = costObject.data();
+            if(body.deliveryType == "Normal"){
+                tobeUsedCost = costObject.normal
+            }else{
+                tobeUsedCost = costObject.express
+            }
+        }else if(body.quoteType && body.quoteType == "SPECIAL" && body.tobeUsedCost){
+            tobeUsedCost = body.tobeUsedCost
         }else{
-            tobeUsedCost = costObject.express
+            reject("Cost Calculation Error")
         }
         var pieceToCostArray = []
+        // TODO: Fix Gen / Haz Costing for dynamic types 
         body.pieces.forEach(piece =>{
             var tempCost = piece.length * piece.breath * piece.height * piece.noOfPieces
             if(piece.inchOrCm == "Inches"){
@@ -89,7 +100,10 @@ quoteModel.getCost = (body) =>{
                 }
             }
         })
-        resolve(pieceToCostArray.reduce((prev,current) =>  prev + current, 0))
+        resolve({
+            calculatedCost : pieceToCostArray.reduce((prev,current) =>  prev + current, 0),
+            tobeUsedCost
+        })
     })
 }
 
